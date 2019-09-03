@@ -35,33 +35,41 @@ def main(output_dir) :
 
         print 'Performing OCR...'
 
+        #Create File and make header
+        with open('%s/results.csv' % (output_dir),'a+') as f:
+            f.write("FileName,LP" + "\n")
+
+
+
         for i,img_path in enumerate(imgs_paths):
 
             print '\tScanning %s' % img_path
 
-            bname = basename(splitext(img_path)[0])
+            bname = basename(splitext(img_path)[0]) #basename of image file 
+            lp_str = 'No Chars Found' #Dummy LP 
 
             R,(width,height) = detect(ocr_net, ocr_meta, img_path ,thresh=ocr_threshold, nms=None)
 
             if len(R):
-
                 L = dknet_label_conversion(R,width,height)
                 L = nms(L,.45)
 
                 L.sort(key=lambda x: x.tl()[0])
                 lp_str = ''.join([chr(l.cl()) for l in L])
+                
+              #  with open('%s/%s_str.txt' % (output_dir,bname),'w') as f:
+              #      f.write(lp_str + '\n')
+            
+            #bname = bname.replace("car_lp_str.txt","")
 
-                with open('%s/%s_str.txt' % (output_dir,bname),'w') as f:
-                    f.write(lp_str + '\n')
-                    
+            if int((bname.split('_')[1].replace("car",""))) > 0: #to remove multiple LPs 
+                print("IGNORED: ImgName: ", bname , ' LP: ' , lp_str , '\n')#to remove multiple LPs 
+        
             else:
-                lp_str = 'No Chars Found'
+                bname = bname.split('_')[0]
 
-            bname = bname.replace("car_lp_str.txt","")
-            bname = bname.split('_')[0]
-
-            print("ImgName: ", bname , ' LP: ' , lp_str , '\n')
-            add_to_results(output_dir, bname, lp_str)
+                print("ImgName: ", bname , ' LP: ' , lp_str , '\n')
+                add_to_results(output_dir, bname, lp_str)
 
         print("---------------------OUT OCR---------------------")
 

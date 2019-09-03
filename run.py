@@ -3,7 +3,7 @@ import vehicleDetection as VD
 import licensePlateDetection as LP
 import licensePlateOcr as OCR
 #import genOutputs as Gen
-#import result_maker as RM
+import result_maker as RM
 
 path = '/home/umar/Desktop/Video_Surveillance_Lab/Car_Theft/Experiments/Datasets/'
 
@@ -26,18 +26,18 @@ for i in range(num_of_dirs):
 	csv_file = os.path.join(output_dir,"results.csv")
 
 	# Detect vehicles
-	VD.main(input_dir, output_dir)
+	#VD.main(input_dir, output_dir)
 	
 	# Detect license plates
-	LP.main(output_dir,lp_model)
+	#LP.main(output_dir,lp_model)
 
 	# OCR
-	OCR.main(output_dir)
+	#OCR.main(output_dir)
 
 	# Draw output and generate list
 	#Gen.main(input_dir, output_dir)
 
-	#RM.main(output_dir)
+	RM.main(input_dir,output_dir)
 
 # files = []
 # txtFiles = [".txt"]
